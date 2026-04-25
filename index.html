@@ -3,81 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>优选测速面板</title>
+    <title>聚源精选 - 节点测速</title>
     <style>
-        :root { --c: #00ff41; --b: #0a0a0a; }
-        body { background: var(--b); color: var(--c); font-family: monospace; padding: 15px; margin: 0; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1px solid rgba(0, 255, 65, 0.2); }
-        th, td { border: 1px solid rgba(0, 255, 65, 0.1); padding: 8px; text-align: left; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        th { background: rgba(0, 255, 65, 0.15); color: var(--c); font-weight: normal; border-bottom: 1px solid var(--c); }
-        tr:hover { background: rgba(0, 255, 65, 0.08); }
-        .ping { font-weight: bold; text-align: right; }
-        .low { color: var(--c); }
-        .mid { color: #ffeb3b; }
-        .high { color: #ff4444; }
-        .flag-cell { display: flex; align-items: center; gap: 8px; }
+        :root {
+            --bg: #1a1c1e;        /* 深色背景 */
+            --card-bg: #25282c;   /* 卡片背景 */
+            --accent: #93a29b;    /* 莫兰迪绿 (强调色) */
+            --text-main: #e1e2e1; /* 主文字 */
+            --text-dim: #a0a0a0;  /* 次要文字 */
+            --low-ping: #8fb1a8;  /* 低延迟 */
+            --mid-ping: #d4b185;  /* 中延迟 */
+            --high-ping: #c98a7d; /* 高延迟 */
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            padding-left: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .header h1 {
+            font-size: 16px;
+            margin: 0;
+            color: var(--accent);
+            letter-spacing: 1px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: var(--accent);
+        }
+
+        .info-left {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow: hidden;
+        }
+
+        .ip-addr {
+            font-weight: bold;
+            font-family: 'Consolas', monospace;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .location {
+            color: var(--text-dim);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .flag {
+            font-size: 14px;
+        }
+
+        .ping-tag {
+            font-family: 'Consolas', monospace;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        /* 延迟颜色分级 */
+        .ping-low { color: var(--low-ping); }
+        .ping-mid { color: var(--mid-ping); }
+        .ping-high { color: var(--high-ping); }
+
+        #toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: none;
+            z-index: 100;
+        }
     </style>
 </head>
 <body>
-    <div style="border-left: 3px solid var(--c); padding-left: 10px; margin-bottom: 15px; letter-spacing: 1px;">
-        >>> 优选节点自动测速 (全部 443 端口)
+
+    <div class="header">
+        <h1>>>> 节点测速监控板</h1>
+        <div style="color: var(--text-dim); margin-top: 4px;">自动更新 · 点击 IP 复制 (已屏蔽端口展示)</div>
     </div>
-    <table id="result-table">
-        <thead>
-            <tr>
-                <th style="width: 50%;">地址 (点击复制)</th>
-                <th style="width: 30%;">国家</th>
-                <th style="width: 20%; text-align: right;">延迟</th>
-            </tr>
-        </thead>
-        <tbody id="list">
-            <tr><td colspan="3" style="text-align:center;padding:40px;">数据加载中...</td></tr>
-        </tbody>
-    </table>
+
+    <div class="container" id="app">
+        </div>
+
+    <div id="toast">已复制纯净地址</div>
 
     <script>
-        const getFlag = (cc) => cc ? cc.toUpperCase().replace(/./g, c => String.fromCodePoint(c.charCodeAt(0) + 127397)) : "🏳️";
+        // 国家代码转国旗 Emoji
+        const getFlag = (cc) => {
+            if (!cc) return "🏳️";
+            return cc.toUpperCase().replace(/./g, c => String.fromCodePoint(c.charCodeAt(0) + 127397));
+        };
 
-        async function render() {
+        // 复制功能：截取端口前的 IP 或域名
+        function copyAddress(rawAddr) {
+            const pureAddr = rawAddr.split(':')[0].replace('[','').replace(']','');
+            navigator.clipboard.writeText(pureAddr).then(() => {
+                const toast = document.getElementById('toast');
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 1500);
+            });
+        }
+
+        async function init() {
+            const app = document.getElementById('app');
             try {
-                const r = await fetch('data.json?v=' + Date.now());
-                const data = await r.json();
-                const list = document.getElementById('list');
-                
+                // 加上时间戳防止缓存
+                const res = await fetch('data.json?t=' + new Date().getTime());
+                const data = await res.json();
+
                 if (!data || data.length === 0) {
-                    list.innerHTML = '<tr><td colspan="3" style="text-align:center;">暂无数据，请等待 Action 运行完成</td></tr>';
+                    app.innerHTML = '<div style="color:var(--text-dim)">暂无数据，请检查 workflow 运行状态。</div>';
                     return;
                 }
 
-                list.innerHTML = data.map(i => {
-                    const ms = parseInt(i.ping);
-                    const color = ms < 100 ? 'low' : (ms < 180 ? 'mid' : 'high');
+                app.innerHTML = data.map(item => {
+                    const pingValue = parseInt(item.ping);
+                    let pingClass = 'ping-high';
+                    if (pingValue < 120) pingClass = 'ping-low';
+                    else if (pingValue < 200) pingClass = 'ping-mid';
+
+                    // 处理展示：去掉中括号和端口
+                    const displayAddr = item.ip.split(':')[0].replace('[','').replace(']','');
+
                     return `
-                        <tr>
-                            <td onclick="copy('${i.ip}')" style="cursor:pointer">
-                                <span style="opacity:0.4">></span> ${i.ip}
-                            </td>
-                            <td>
-                                <div class="flag-cell">
-                                    <span>${getFlag(i.cc)}</span>
-                                    <span>${i.location || "未知"}</span>
+                        <div class="card" onclick="copyAddress('${item.ip}')">
+                            <div class="info-left">
+                                <div class="ip-addr">${displayAddr}</div>
+                                <div class="location">
+                                    <span class="flag">${getFlag(item.cc)}</span>
+                                    <span>${item.location || '未知地区'}</span>
                                 </div>
-                            </td>
-                            <td class="ping ${color}">${ms}ms</td>
-                        </tr>
+                            </div>
+                            <div class="ping-tag ${pingClass}">
+                                ${pingValue}ms
+                            </div>
+                        </div>
                     `;
                 }).join('');
+
             } catch (e) {
-                document.getElementById('list').innerHTML = '<tr><td colspan="3" style="text-align:center;">读取失败，请检查仓库路径</td></tr>';
+                app.innerHTML = '<div style="color:var(--high-ping)">加载失败：未找到 data.json</div>';
             }
         }
 
-        function copy(txt) {
-            navigator.clipboard.writeText(txt);
-            console.log('Copied:', txt);
-        }
-
-        render();
+        init();
     </script>
 </body>
 </html>
