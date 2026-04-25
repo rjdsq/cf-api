@@ -19,83 +19,60 @@ jobs:
           tar -zxf CloudflareST_linux_amd64.tar.gz
           chmod +x CloudflareST
 
-      - name: 提取并分类地址
+      - name: 提取并清洗
         run: |
           curl -s https://ip-31c.pages.dev/sub > raw.txt
           python3 -c "
           import re
-          def get_type(addr):
-              if re.match(r'^(\d{1,3}\.){3}\d{1,3}$', addr): return 'ipv4'
-              if ':' in addr: return 'ipv6'
-              return 'domain'
-
           with open('raw.txt', 'r') as f:
               lines = f.readlines()
-          
-          d_list, v6_list, v4_list = set(), set(), set()
+          clean_list = set()
           for line in lines:
               addr = line.split('#')[0].strip()
               addr = re.sub(r':[0-9]+$', '', addr).replace('[', '').replace(']', '')
-              if not addr: continue
-              t = get_type(addr)
-              if t == 'domain': d_list.add(addr)
-              elif t == 'ipv6': v6_list.add(addr)
-              else: v4_list.add(addr)
-          
-          with open('1.txt', 'w') as f: f.write('\n'.join(list(d_list)))
-          with open('2.txt', 'w') as f: f.write('\n'.join(list(v6_list)))
-          with open('3.txt', 'w') as f: f.write('\n'.join(list(v4_list)))
+              if addr: clean_list.add(addr)
+          with open('ip.txt', 'w') as f:
+              f.write('\n'.join(list(clean_list)))
           "
-          echo "分类完成：域名($(wc -l < 1.txt)) IPv6($(wc -l < 2.txt)) IPv4($(wc -l < 3.txt))"
+          echo "TOTAL_COUNT=$(wc -l < ip.txt)" >> $GITHUB_ENV
 
-      - name: 执行分类测速
+      - name: 执行测速
         run: |
-          # 1. 域名测速：不用 -f，直接传参（解决域名报错核心）
-          if [ -s 1.txt ]; then
-            ./CloudflareST -ip $(cat 1.txt | tr '\n' ',') -dn 50 -tl 250 -sl 0 -o res_d.csv || true
-          fi
-          # 2. IPv6 测速
-          if [ -s 2.txt ]; then
-            ./CloudflareST -f 2.txt -dn 50 -tl 250 -sl 0 -o res_v6.csv || true
-          fi
-          # 3. IPv4 测速
-          if [ -s 3.txt ]; then
-            ./CloudflareST -f 3.txt -dn 50 -tl 250 -sl 0 -o res_v4.csv || true
-          fi
+          ./CloudflareST -f ip.txt -dn 100 -tl 250 -sl 0 -o result.csv || true
 
-      - name: 格式化展示数据
+      - name: 格式化并补全中文名
         run: |
           python3 -c "
           import csv, json, requests, os
-          CN_MAP = {'BD':'孟加拉国','BE':'比利时','BF':'布基纳法索','BG':'保加利亚','BA':'波黑','BB':'巴巴多斯','WF':'瓦利斯','BL':'圣巴泰勒米','BM':'百慕大','BN':'文莱','BO':'玻利维亚','BH':'巴林','BI':'布隆迪','BJ':'贝宁','BT':'不丹','JM':'牙买加','BV':'布韦岛','BW':'博茨瓦纳','WS':'萨摩亚','BR':'巴西','BS':'巴哈马','JE':'泽西岛','BY':'白俄罗斯','BZ':'伯利兹','RU':'俄罗斯','RW':'卢旺达','RS':'塞尔维亚','TL':'东帝汶','RE':'留尼汪','TM':'土库曼斯坦','TJ':'塔吉克斯坦','RO':'罗马尼亚','TK':'托克劳','GW':'几内亚比绍','GU':'关岛','GT':'危地马拉','GS':'南乔治亚','GR':'希腊','GQ':'赤道几内亚','GP':'瓜德罗普','JP':'日本','GY':'圭亚那','GG':'根西岛','GF':'法属圭亚那','GE':'格鲁吉亚','GD':'格林纳达','GB':'英国','GA':'加蓬','SV':'萨尔瓦多','GN':'几内亚','GM':'冈比亚','GL':'格陵兰','GI':'直布罗陀','GH':'加纳','OM':'阿曼','TN':'突尼斯','JO':'约旦','HR':'克罗地亚','HT':'海地','HU':'匈牙利','HK':'香港','HN':'洪后拉斯','HM':'赫德岛','VE':'委内瑞拉','PR':'波多黎各','PS':'巴勒斯坦','PW':'帕劳','PT':'葡萄牙','SJ':'斯瓦尔巴','PY':'巴拉圭','IQ':'伊拉克','PA':'巴拿马','PF':'法属波利尼西亚','PG':'巴新','PE':'秘鲁','PK':'巴基斯坦','PH':'菲律宾','PN':'皮特凯恩','PL':'波兰','PM':'圣皮埃尔','ZM':'赞比亚','EH':'西撒哈拉','EE':'爱沙尼亚','EG':'埃及','ZA':'南非','EC':'厄瓜多尔','IT':'意大利','VN':'越南','SB':'所罗门','ET':'埃塞俄比亚','SO':'索马里','ZW':'津巴布韦','SA':'沙特','ES':'西班牙','ER':'厄立特里亚','ME':'黑山','MD':'摩尔多瓦','MG':'马达加斯加','MF':'圣马丁','MA':'摩洛哥','MC':'摩纳哥','UZ':'乌兹别克','MM':'缅甸','ML':'马里','MO':'澳门','MN':'蒙古','MH':'马绍尔','MK':'马其顿','MU':'毛里求斯','MT':'马耳他','MW':'马拉维','MV':'马尔代夫','MQ':'马提尼克','MP':'北马里亚纳','MS':'蒙特赛拉特','MR':'毛里塔尼亚','IM':'曼岛','UG':'乌干达','TZ':'坦桑尼亚','MY':'马来西亚','MX':'墨西哥','IL':'以色列','FR':'法国','IO':'英属印度洋','SH':'圣赫勒拿','FI':'芬兰','FJ':'斐济','FK':'福克兰','FM':'密克罗尼西亚','FO':'法罗','NI':'尼加拉瓜','NL':'荷兰','NO':'挪威','NA':'纳米比亚','VU':'瓦努阿图','NC':'新喀里多尼亚','NE':'尼日尔','NF':'诺福克','NG':'尼日利亚','NZ':'新西兰','NP':'尼泊尔','NR':'瑙鲁','NU':'纽埃','CK':'库克群岛','XK':'科索沃','CI':'科特迪瓦','CH':'瑞士','CO':'哥伦比亚','CN':'中国','CM':'喀麦隆','CL':'智利','CC':'科科斯','CA':'加拿大','CG':'刚果','CF':'中非','CD':'刚果金','CZ':'捷克','CY':'塞浦路斯','CX':'圣诞岛','CR':'哥斯达黎加','CW':'库拉索','CV':'佛得角','CU':'古巴','SZ':'斯威士兰','SY':'叙利亚','KG':'吉尔吉斯','KE':'肯尼亚','SR':'苏里南','KI':'基里巴斯','KH':'柬埔寨','KN':'圣基茨','KM':'科摩罗','ST':'圣多美','SK':'斯洛伐克','KR':'韩国','SI':'斯洛文尼亚','KP':'朝鲜','KW':'科威特','SN':'塞内加尔','SM':'圣马力诺','SL':'塞拉利昂','SC':'塞舌尔','KZ':'哈萨克斯坦','KY':'开曼','SG':'新加坡','SE':'瑞典','SD':'苏丹','DO':'多米尼加','DM':'多米尼克','DJ':'吉布提','DK':'丹麦','VG':'英属维尔京','DE':'德国','YE':'也门','DZ':'阿尔及利亚','US':'美国','UY':'乌拉圭','YT':'马约特','UM':'美属离岛','LB':'黎巴嫩','LC':'圣卢西亚','LA':'老挝','TV':'图瓦卢','TW':'台湾','TT':'特立尼达','TR':'土耳其','LK':'斯里兰卡','LI':'列支敦士登','LV':'拉脱维亚','TO':'湯加','LT':'立陶宛','LU':'卢森堡','LR':'利比里亚','LS':'莱索托','TH':'泰国','TF':'法属南部','TG':'多哥','TD':'乍得','TC':'特克斯','LY':'利比亚','VA':'梵蒂冈','VC':'圣文森特','AE':'阿联酋','AD':'安道尔','AG':'安提瓜','AF':'阿富汗','AI':'安圭拉','VI':'美属维尔京','IS':'冰岛','IR':'伊朗','AM':'亚美尼亚','AL':'阿尔巴尼亚','AO':'安哥拉','AQ':'南极洲','AS':'美属萨摩亚','AR':'阿根廷','AU':'澳大利亚','AT':'奥地利','AW':'阿鲁巴','IN':'印度','AX':'奥兰群岛','AZ':'阿塞拜疆','IE':'爱尔兰','ID':'印尼','UA':'乌克兰','QA':'卡塔尔','MZ':'莫桑比克'}
+          
+          CN_MAP = {'BD':'孟加拉国','BE':'比利时','BF':'布基纳法索','BG':'保加利亚','BA':'波黑','BB':'巴巴多斯','WF':'瓦利斯','BL':'圣巴泰勒米','BM':'百慕大','BN':'文莱','BO':'玻利维亚','BH':'巴林','BI':'布隆迪','BJ':'贝宁','BT':'不丹','JM':'牙买加','BV':'布韦岛','BW':'博茨瓦纳','WS':'萨摩亚','BR':'巴西','BS':'巴哈马','JE':'泽西岛','BY':'白俄罗斯','BZ':'伯利兹','RU':'俄罗斯','RW':'卢旺达','RS':'塞尔维亚','TL':'东帝汶','RE':'留尼汪','TM':'土库曼斯坦','TJ':'塔吉克斯坦','RO':'罗马尼亚','TK':'托克劳','GW':'几内亚比绍','GU':'关岛','GT':'危地马拉','GS':'南乔治亚','GR':'希腊','GQ':'赤道几内亚','GP':'瓜德罗普','JP':'日本','GY':'圭亚那','GG':'根西岛','GF':'法属圭亚那','GE':'格鲁吉亚','GD':'格林纳达','GB':'英国','GA':'加蓬','SV':'萨尔瓦多','GN':'几内亚','GM':'冈比亚','GL':'格陵兰','GI':'直布罗陀','GH':'加纳','OM':'阿曼','TN':'突尼斯','JO':'约旦','HR':'克罗地亚','HT':'海地','HU':'匈牙利','HK':'香港','HN':'洪后拉斯','HM':'赫德岛','VE':'委内瑞拉','PR':'波多黎各','PS':'巴勒斯坦','PW':'帕劳','PT':'葡萄牙','SJ':'斯瓦尔巴','PY':'巴拉圭','IQ':'伊拉克','PA':'巴拿马','PF':'法属波利尼西亚','PG':'巴新','PE':'秘鲁','PK':'巴基斯坦','PH':'菲律宾','PN':'皮特凯恩','PL':'波兰','PM':'圣皮埃尔','ZM':'赞比亚','EH':'西撒哈拉','EE':'爱沙尼亚','EG':'埃及','ZA':'南非','EC':'厄瓜多尔','IT':'意大利','VN':'越南','SB':'所罗门','ET':'埃塞俄比亚','SO':'索马里','ZW':'津巴布韦','SA':'沙特','ES':'西班牙','ER':'厄立特里亚','ME':'黑山','MD':'摩尔多瓦','MG':'马达加斯加','MF':'圣马丁','MA':'摩洛哥','MC':'摩纳哥','UZ':'乌兹别克','MM':'缅甸','ML':'马里','MO':'澳门','MN':'蒙古','MH':'马绍尔','MK':'马其顿','MU':'毛里求斯','MT':'马耳他','MW':'马拉维','MV':'马尔代夫','MQ':'马提尼克','MP':'北马里亚纳','MS':'蒙特赛拉特','MR':'毛里塔尼亚','IM':'曼岛','UG':'乌干达','TZ':'坦桑尼亚','MY':'马来西亚','MX':'墨西哥','IL':'以色列','FR':'法国','IO':'英属印度洋','SH':'圣赫勒拿','FI':'芬兰','FJ':'斐济','FK':'福克兰','FM':'密克罗尼西亚','FO':'法罗','NI':'尼加拉瓜','NL':'荷兰','NO':'挪威','NA':'纳米比亚','VU':'瓦努阿图','NC':'新喀里多尼亚','NE':'尼日尔','NF':'诺福克','NG':'尼日利亚','NZ':'新西兰','NP':'尼泊尔','NR':'瑙鲁','NU':'纽埃','CK':'库克群岛','XK':'科索沃','CI':'科特迪瓦','CH':'瑞士','CO':'哥伦比亚','CN':'中国','CM':'喀麦隆','CL':'智利','CC':'科科斯','CA':'加拿大','CG':'刚果','CF':'中非','CD':'刚果金','CZ':'捷克','CY':'塞浦路斯','CX':'圣诞岛','CR':'哥斯达黎加','CW':'库拉索','CV':'佛得角','CU':'古巴','SZ':'斯威士兰','SY':'叙利亚','KG':'吉尔吉斯','KE':'肯尼亚','SR':'苏里南','KI':'基里巴斯','KH':'柬埔寨','KN':'圣基茨','KM':'科摩罗','ST':'圣多美','SK':'斯洛伐克','KR':'韩国','SI':'斯洛文尼亚','KP':'朝鲜','KW':'科威特','SN':'塞内加尔','SM':'圣马力诺','SL':'塞拉利昂','SC':'塞舌尔','KZ':'哈萨克斯坦','KY':'开曼','SG':'新加坡','SE':'瑞典','SD':'苏丹','DO':'多米尼加','DM':'多米尼克','DJ':'吉布提','DK':'丹麦','VG':'英属维尔京','DE':'德国','YE':'也门','DZ':'阿尔及利亚','US':'美国','UY':'乌拉圭','YT':'马约特','UM':'美属离岛','LB':'黎巴嫩','LC':'圣卢西亚','LA':'老挝','TV':'图瓦卢','TW':'台湾','TT':'特立尼达','TR':'土耳其','LK':'斯里兰卡','LI':'列支敦士登','LV':'拉脱维亚','TO':'汤加','LT':'立陶宛','LU':'卢森堡','LR':'利比里亚','LS':'莱索托','TH':'泰国','TF':'法属南部','TG':'多哥','TD':'乍得','TC':'特克斯','LY':'利比亚','VA':'梵蒂冈','VC':'圣文森特','AE':'阿联酋','AD':'安道尔','AG':'安提瓜','AF':'阿富汗','AI':'安圭拉','VI':'美属维尔京','IS':'冰岛','IR':'伊朗','AM':'亚美尼亚','AL':'阿尔巴尼亚','AO':'安哥拉','AQ':'南极洲','AS':'美属萨摩亚','AR':'阿根廷','AU':'澳大利亚','AT':'奥地利','AW':'阿鲁巴','IN':'印度','AX':'奥兰群岛','AZ':'阿塞拜疆','IE':'爱尔兰','ID':'印尼','UA':'乌克兰','QA':'卡塔尔','MZ':'莫桑比克'}
+          
+          res = []
           TOKEN = 'c50cf1de215cf1'
-          final_data = []
-          for csv_file in ['res_d.csv', 'res_v6.csv', 'res_v4.csv']:
-              if os.path.exists(csv_file):
-                  with open(csv_file, 'r', encoding='utf-8') as f:
-                      reader = csv.DictReader(f)
-                      ip_col = next((c for c in reader.fieldnames if 'IP' in c.upper()), None)
-                      ping_col = next((c for c in reader.fieldnames if '延迟' in c or 'Latency' in c or 'Ping' in c.upper()), None)
-                      if not ip_col: continue
-                      for row in reader:
-                          ip_val = row[ip_col]
-                          loc, cc = '未知地区', ''
-                          try:
-                              r = requests.get(f'https://ipinfo.io/{ip_val.replace(\"[\",\"\").replace(\"]\",\"\")}?token={TOKEN}', timeout=3).json()
-                              cc = r.get('country', '').lower()
-                              loc = CN_MAP.get(r.get('country', ''), '未知')
-                          except: pass
-                          final_data.append({'ip': ip_val, 'ping': row[ping_col], 'location': loc, 'cc': cc})
-          # 按延迟排序取前 100
-          final_data.sort(key=lambda x: float(x['ping']))
+          if os.path.exists('result.csv'):
+              with open('result.csv', 'r', encoding='utf-8') as f:
+                  reader = csv.DictReader(f)
+                  ip_col = next((c for c in reader.fieldnames if 'IP' in c.upper()), None)
+                  ping_col = next((c for c in reader.fieldnames if '延迟' in c or 'Ping' in c.upper()), None)
+                  for row in reader:
+                      ip_val = row[ip_col]
+                      loc_name, cc_code = '未知', ''
+                      try:
+                          r = requests.get(f'https://ipinfo.io/{ip_val}?token={TOKEN}', timeout=5).json()
+                          cc_code = r.get('country', '').lower()
+                          loc_name = CN_MAP.get(r.get('country', ''), '未知')
+                      except: pass
+                      res.append({'ip': ip_val, 'ping': row[ping_col], 'loc': loc_name, 'cc': cc_code})
+          
+          output = {'total': os.getenv('TOTAL_COUNT'), 'list': res}
           with open('data.json', 'w', encoding='utf-8') as f:
-              json.dump(final_data[:100], f, ensure_ascii=False, indent=2)
+              json.dump(output, f, ensure_ascii=False, indent=2)
           "
 
-      - name: 自动提交结果
+      - name: 自动提交
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Action"
           git add data.json
-          git commit -m "更新测速数据: $(date)" || exit 0
+          git commit -m "Update" || exit 0
           git push
