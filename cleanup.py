@@ -14,16 +14,16 @@ def clean_ips():
             # 1. 截取 # 之前的地址内容
             addr = line.split('#')[0].strip()
             
-            # 2. 正则匹配：去除行尾的端口号
-            # 兼容 IPv4 (1.1.1.1:443 -> 1.1.1.1)
-            # 兼容 IPv6 ([2001:db8::1]:443 -> [2001:db8::1])
-            # 兼容 域名 (zeas.top:443 -> zeas.top)
+            # 2. 移除端口号：匹配最后一个冒号及其后的数字
             addr = re.sub(r':[0-9]+$', '', addr)
+            
+            # 3. 关键修复：移除 IPv6 的中括号 [] 
+            # CloudflareST 工具不需要中括号也能识别 IPv6
+            addr = addr.replace('[', '').replace(']', '')
             
             if addr:
                 pure_ips.add(addr)
         
-        # 将清洗后的纯净地址写入 test_ip.txt 供工具使用
         with open('test_ip.txt', 'w', encoding='utf-8') as f:
             for ip in sorted(list(pure_ips)):
                 f.write(ip + '\n')
