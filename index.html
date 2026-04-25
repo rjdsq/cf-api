@@ -3,35 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>聚源优选测速</title>
+    <title>优选测速面板</title>
     <style>
         :root { --c: #00ff41; --b: #0a0a0a; }
         body { background: var(--b); color: var(--c); font-family: monospace; padding: 15px; margin: 0; font-size: 12px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
-        th, td { border: 1px solid rgba(0, 255, 65, 0.2); padding: 8px; text-align: left; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        th { background: rgba(0, 255, 65, 0.1); color: var(--c); font-weight: normal; }
-        tr:hover { background: rgba(0, 255, 65, 0.05); }
-        .ping { font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; border: 1px solid rgba(0, 255, 65, 0.2); }
+        th, td { border: 1px solid rgba(0, 255, 65, 0.1); padding: 8px; text-align: left; font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        th { background: rgba(0, 255, 65, 0.15); color: var(--c); font-weight: normal; border-bottom: 1px solid var(--c); }
+        tr:hover { background: rgba(0, 255, 65, 0.08); }
+        .ping { font-weight: bold; text-align: right; }
         .low { color: var(--c); }
         .mid { color: #ffeb3b; }
         .high { color: #ff4444; }
-        .flag-cell { display: flex; align-items: center; gap: 6px; }
-        .btn-copy { cursor: pointer; color: #fff; background: rgba(0, 255, 65, 0.2); border: none; padding: 2px 6px; font-size: 10px; }
-        .btn-copy:active { background: var(--c); }
+        .flag-cell { display: flex; align-items: center; gap: 8px; }
     </style>
 </head>
 <body>
-    <div style="border-bottom: 1px solid var(--c); padding-bottom: 5px; margin-bottom: 10px;">>>> 优选测速清单 (全部数据)</div>
+    <div style="border-left: 3px solid var(--c); padding-left: 10px; margin-bottom: 15px; letter-spacing: 1px;">
+        >>> 优选节点自动测速 (全部 443 端口)
+    </div>
     <table id="result-table">
         <thead>
             <tr>
-                <th style="width: 45%;">地址 (IP/域名)</th>
-                <th style="width: 35%;">归属</th>
-                <th style="width: 20%;">延迟</th>
+                <th style="width: 50%;">地址 (点击复制)</th>
+                <th style="width: 30%;">国家</th>
+                <th style="width: 20%; text-align: right;">延迟</th>
             </tr>
         </thead>
         <tbody id="list">
-            <tr><td colspan="3">正在读取加密数据...</td></tr>
+            <tr><td colspan="3" style="text-align:center;padding:40px;">数据加载中...</td></tr>
         </tbody>
     </table>
 
@@ -44,26 +44,23 @@
                 const data = await r.json();
                 const list = document.getElementById('list');
                 
-                if (data.length === 0) {
-                    list.innerHTML = '<tr><td colspan="3">暂无数据，请检查 Action 运行日志</td></tr>';
+                if (!data || data.length === 0) {
+                    list.innerHTML = '<tr><td colspan="3" style="text-align:center;">暂无数据，请等待 Action 运行完成</td></tr>';
                     return;
                 }
 
                 list.innerHTML = data.map(i => {
                     const ms = parseInt(i.ping);
                     const color = ms < 100 ? 'low' : (ms < 180 ? 'mid' : 'high');
-                    // 仅保留国家名，去掉城市
-                    const countryName = i.location ? i.location.split(' ')[0] : "未知";
-                    
                     return `
                         <tr>
                             <td onclick="copy('${i.ip}')" style="cursor:pointer">
-                                <span style="color:#aaa;margin-right:4px">#</span>${i.ip}
+                                <span style="opacity:0.4">></span> ${i.ip}
                             </td>
                             <td>
                                 <div class="flag-cell">
                                     <span>${getFlag(i.cc)}</span>
-                                    <span>${countryName}</span>
+                                    <span>${i.location || "未知"}</span>
                                 </div>
                             </td>
                             <td class="ping ${color}">${ms}ms</td>
@@ -71,15 +68,13 @@
                     `;
                 }).join('');
             } catch (e) {
-                document.getElementById('list').innerHTML = '<tr><td colspan="3">读取失败，请确保 data.json 已推送到仓库</td></tr>';
+                document.getElementById('list').innerHTML = '<tr><td colspan="3" style="text-align:center;">读取失败，请检查仓库路径</td></tr>';
             }
         }
 
         function copy(txt) {
-            const portText = txt.includes(':') ? txt : txt + ':443';
-            navigator.clipboard.writeText(portText);
-            // 简单的静默提示，不弹窗破坏美感
-            console.log('Copied:', portText);
+            navigator.clipboard.writeText(txt);
+            console.log('Copied:', txt);
         }
 
         render();
