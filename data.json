@@ -1,302 +1,302 @@
 [
   {
     "ip": "192.80.63.51",
-    "ping": "20.25",
-    "location": "美国 Chandler",
-    "cc": "us"
-  },
-  {
-    "ip": "23.95.56.195",
-    "ping": "8.47",
-    "location": "美国 Los Angeles",
-    "cc": "us"
-  },
-  {
-    "ip": "96.8.121.109",
-    "ping": "23.44",
-    "location": "美国 Seattle",
+    "ping": "3.70",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "166.117.184.30",
-    "ping": "1.08",
-    "location": "美国 Seattle",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.151.48",
-    "ping": "1.68",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "92.243.74.4",
-    "ping": "1.70",
-    "location": "柬埔寨 Phnom Penh",
-    "cc": "kh"
-  },
-  {
-    "ip": "104.17.140.144",
-    "ping": "1.73",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "172.64.49.147",
-    "ping": "1.74",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.16.186.45",
-    "ping": "1.74",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.25.252.157",
-    "ping": "1.74",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.18.46.182",
-    "ping": "1.76",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.16.154.220",
-    "ping": "1.78",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "172.67.119.204",
-    "ping": "1.78",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "108.162.198.203",
-    "ping": "1.78",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.36.138",
-    "ping": "1.81",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.181.147",
-    "ping": "1.84",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.27.79.237",
-    "ping": "1.85",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.62.174",
-    "ping": "1.86",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.137.77",
-    "ping": "1.86",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.25.255.110",
-    "ping": "1.87",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.16.249.118",
-    "ping": "1.88",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.59.123",
-    "ping": "1.90",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.47.238",
-    "ping": "1.94",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.19.45.216",
-    "ping": "1.95",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.25.247.157",
-    "ping": "1.95",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "198.41.209.57",
-    "ping": "1.96",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "172.64.52.145",
-    "ping": "1.97",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "198.41.208.28",
-    "ping": "1.98",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.137.68",
-    "ping": "1.99",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.170.171",
-    "ping": "2.00",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "172.64.146.90",
-    "ping": "2.00",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.136.164",
-    "ping": "2.01",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.18.42.26",
-    "ping": "2.04",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.21.83.238",
-    "ping": "2.07",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.167.215",
-    "ping": "2.10",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.16.120.64",
-    "ping": "2.10",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "172.67.127.0",
-    "ping": "2.11",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.17.229.176",
-    "ping": "2.14",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.44.72",
-    "ping": "8.47",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "104.16.1.160",
-    "ping": "1.67",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.45.239",
-    "ping": "8.48",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.45.49",
-    "ping": "8.50",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.39.94",
-    "ping": "8.51",
-    "location": "美国 San Francisco",
-    "cc": "us"
-  },
-  {
-    "ip": "162.159.24.132",
-    "ping": "1.66",
-    "location": "美国 San Francisco",
+    "ping": "8.66",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "162.159.38.99",
-    "ping": "8.56",
-    "location": "美国 San Francisco",
+    "ping": "8.88",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.16.120.64",
+    "ping": "8.97",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.39.94",
+    "ping": "8.97",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.16.249.118",
+    "ping": "9.03",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.136.164",
+    "ping": "9.07",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "162.159.44.51",
-    "ping": "8.59",
-    "location": "美国 San Francisco",
+    "ping": "9.07",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.170.171",
+    "ping": "9.16",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.18.46.182",
+    "ping": "9.19",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "172.64.146.90",
+    "ping": "9.20",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.229.176",
+    "ping": "9.24",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "162.159.45.195",
-    "ping": "8.61",
-    "location": "美国 San Francisco",
+    "ping": "9.24",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "172.67.127.0",
+    "ping": "9.30",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.19.59.123",
+    "ping": "9.33",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.62.174",
+    "ping": "9.39",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.18.42.26",
+    "ping": "9.40",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.45.239",
+    "ping": "9.40",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "92.243.74.4",
+    "ping": "9.48",
+    "location": "柬埔寨",
+    "cc": "kh"
+  },
+  {
+    "ip": "172.64.52.145",
+    "ping": "9.48",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.19.36.138",
+    "ping": "9.54",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.137.77",
+    "ping": "9.54",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.16.154.220",
+    "ping": "9.58",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.167.215",
+    "ping": "9.59",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.21.83.238",
+    "ping": "9.65",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.16.1.160",
+    "ping": "9.66",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.25.255.110",
+    "ping": "9.68",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.27.79.237",
+    "ping": "9.69",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "162.159.60.4",
-    "ping": "1.62",
-    "location": "美国 San Francisco",
+    "ping": "9.72",
+    "location": "美国",
     "cc": "us"
   },
   {
-    "ip": "23.95.18.12",
-    "ping": "22.79",
-    "location": "美国 Seattle",
+    "ip": "104.19.47.238",
+    "ping": "9.72",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.45.49",
+    "ping": "9.78",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.25.252.157",
+    "ping": "9.79",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "198.41.208.28",
+    "ping": "9.80",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.24.132",
+    "ping": "9.87",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.19.45.216",
+    "ping": "9.87",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "162.159.44.72",
+    "ping": "9.91",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.25.247.157",
+    "ping": "10.00",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.140.144",
+    "ping": "10.06",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "172.64.49.147",
+    "ping": "10.06",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "198.41.209.57",
+    "ping": "10.09",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "23.95.56.195",
+    "ping": "10.12",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.17.137.68",
+    "ping": "10.13",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.19.151.48",
+    "ping": "10.13",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.19.181.147",
+    "ping": "10.13",
+    "location": "美国",
     "cc": "us"
   },
   {
     "ip": "162.159.44.28",
-    "ping": "8.56",
-    "location": "美国 San Francisco",
+    "ping": "10.19",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "172.67.119.204",
+    "ping": "10.22",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "104.16.186.45",
+    "ping": "10.23",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "108.162.198.203",
+    "ping": "18.78",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "193.233.204.4",
+    "ping": "25.89",
+    "location": "美国",
+    "cc": "us"
+  },
+  {
+    "ip": "96.8.121.109",
+    "ping": "37.47",
+    "location": "美国",
     "cc": "us"
   }
 ]
