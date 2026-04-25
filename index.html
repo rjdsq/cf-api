@@ -2,18 +2,19 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>优选列表</title>
     <style>
         body { background: #000; color: #8fb1a8; font-family: monospace; padding: 10px; margin: 0; font-size: 12px; }
         .stats { color: #555; padding-bottom: 8px; border-bottom: 1px solid #222; margin-bottom: 10px; }
         table { width: 100%; border-collapse: collapse; }
-        td { padding: 8px 4px; border-bottom: 1px solid #111; }
+        td { padding: 8px 4px; border-bottom: 1px solid #111; vertical-align: middle; }
         .ping { text-align: right; width: 60px; font-weight: bold; }
         .low { color: #00ff41; }
         .mid { color: #ffeb3b; }
         .high { color: #ff4444; }
         .ip-cell { color: #ddd; word-break: break-all; }
-        .loc-cell { color: #666; font-size: 11px; }
+        .loc-text { color: #666; font-size: 11px; margin-top: 2px; display: block; }
     </style>
 </head>
 <body>
@@ -31,7 +32,7 @@
                     const color = ms < 120 ? 'low' : (ms < 200 ? 'mid' : 'high');
                     return `<tr onclick="navigator.clipboard.writeText('${i.ip}')">
                         <td style="width:25px;">${getFlag(i.cc)}</td>
-                        <td class="ip-cell">${i.ip}<br><span class="loc-cell">${i.loc}</span></td>
+                        <td class="ip-cell">${i.ip}<span class="loc-text">${i.loc}</span></td>
                         <td class="ping ${color}">${ms}ms</td>
                     </tr>`;
                 }).join('');
