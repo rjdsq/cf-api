@@ -13,7 +13,7 @@
         .low { color: #00ff41; }
         .mid { color: #ffeb3b; }
         .high { color: #ff4444; }
-        .ip-cell { color: #ddd; word-break: break-all; }
+        .ip-cell { color: #ddd; word-break: break-all; cursor: pointer; }
         .loc-text { color: #666; font-size: 11px; margin-top: 2px; display: block; }
     </style>
 </head>
@@ -26,7 +26,7 @@
             try {
                 const r = await fetch('data.json?t=' + Date.now());
                 const d = await r.json();
-                document.getElementById('info').innerText = `已选: ${d.list.length} / 总数: ${d.total}`;
+                document.getElementById('info').innerText = `已选: ${d.list.length} / 总计: ${d.total}`;
                 document.getElementById('main').innerHTML = d.list.map(i => {
                     const ms = parseInt(i.ping);
                     const color = ms < 120 ? 'low' : (ms < 200 ? 'mid' : 'high');
